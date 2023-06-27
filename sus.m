@@ -32,17 +32,7 @@ function d=sus(c)
  ab=@(x) (diffT0(x)+diffT1(x))./e(x)-diffe(x).*(T0(x)+T1(x))./(e(x).^2);
  de=@(x) (e(x).*(diffT0(x).*diffw(x)+diff2w(x).*T0(x))-diffe(x).*T0(x).*diffw(x))./(e(x).^2)+...
      (y1(x)+diffw(x)).*(diffT1(x).*e(x)-diffe(x).*T1(x))./(e(x).^2)+T1(x).*(y2+diff2w(x))./e(x);
-%  ab=@(x) ((EcAc*(ys(x).*(diff2u(x)+diffu(x).*diff2u(x)+(y1(x)+diffw(x)).*(y2+diff2w(x))))./e(x)-EcAc*y2*e(x).*y1(x)./ys(x))./...
-%      (ys(x).^2)+H0*y2*y1(x)./ys(x))./e(x)-(((diff2u(x)+diffu(x).*diff2u(x)+(y1(x)+diffw(x)).*(y2+diff2w(x)))./e(x)).*...
-%      (H0*ys(x)+EcAc*(e(x)./ys(x)-1)))./(e(x).^2);
-%  de=@(x) (e(x).*((H0*y2*y1(x).*diffw(x)./ys(x))+H0*diff2w(x).*ys(x))-H0*diffw(x).*ys(x).*...
-%      (diff2u(x)+diffu(x).*diff2u(x)+(y1(x)+diffw(x)).*(y2+diff2w(x)))./e(x))./(e(x).^2)+...
-%      (((EcAc*e(x)).*((diff2u(x)+diffu(x).*diff2u(x)+(y1(x)+diffw(x)).*(y2+diff2w(x)))./(e(x).*ys(x))-...
-%      e(x).*y1(x)*y2./(ys(x).^3)))./(e(x).^2)-EcAc*(e(x)./ys(x)-1)./(e(x).^3).*...
-%      (diff2u(x)+diffu(x).*diff2u(x)+(y1(x)+diffw(x)).*(y2+diff2w(x)))).*(y1(x)+diffw(x))+...
-%      (diff2w(x)+y2).*(EcAc*(e(x)./ys(x)-1))./e(x);
  Q=@(x) de(x)+es(x);
-%  M=@(x) ab(x).*(1+diffu(x))+diff2u(x).*(EcAc*(e(x)./ys(x)-1)+H0*ys(x))./e(x);
  M=@(x) ab(x).*(1+diffu(x))+diff2u(x).*(T0(x)+T1(x))./e(x);
  p2=@(x)   50*(x<=L/2   );
  K=@(x) E1I1*diff4v(x)+es(x)-p2(x);  %p为荷载
@@ -54,7 +44,8 @@ function d=sus(c)
 %       d(i)=integral(@(x) sin(i*pi*x./L).*K(x),0,L,'AbsTol',1e-5);
 %       d(i+n)=integral(@(x) sin(i*pi*x./L).*Q(x),0,L,'AbsTol',1e-5);
 %      d(i+2*n)=integral(@(x) sin(i*pi*x./L).*M(x),0,L,'AbsTol',1e-5);
-  d(i)=int(0,L,sin(i*pi*x1./L).*s1);d(i+n)=int(0,L,sin(i*pi*x1./L).*s2); 
+  d(i)=int(0,L,sin(i*pi*x1./L).*s1);
+  d(i+n)=int(0,L,sin(i*pi*x1./L).*s2); 
   d(i+2*n)=int(0,L,sin(i*pi*x1./L).*s3);
  end
 %  d(3*n+1)=u(0)-delt1;d(3*n+2)=u(L)-delt2;
@@ -63,7 +54,7 @@ end
 function y=int(a,b,s)
 % a:start pt; b: end pt
 % s: series to be integrated
-n=length(s)-1; %n等分
+n=length(s)-1;  
 h=(b-a)/n;
 y=3*(s(1)+s(n+1))+6*sum(s(2:1:n));
 y=y*h/6;
